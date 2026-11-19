@@ -1,7 +1,7 @@
-// profile-chip 鈥?always-visible profile readout in the status bar.
+// profile-chip — always-visible profile readout in the status bar.
 //
 // The problem it solves: a brand-new draft (Ctrl+N) shows no profile anywhere
-// in the chat pane 鈥?core's title-bar profile tag only mounts once the first
+// in the chat pane — core's title-bar profile tag only mounts once the first
 // message creates the stored session. This chip reads the FOCUSED chat owner,
 // which falls back to the active gateway owner while no session exists, so the
 // draft's (connection, profile) is named before the first send.
@@ -49,7 +49,7 @@ function identityColor(name) {
   return `hsl(${hash % 360} 68% 58%)`
 }
 
-// First letter/number/emoji grapheme 鈥?same rule as core profileShortLabel.
+// First letter/number/emoji grapheme — same rule as core profileShortLabel.
 function shortLabel(name) {
   const label = String(name || '').trim()
   try {
@@ -58,7 +58,7 @@ function shortLabel(name) {
       if (/[\p{L}\p{N}\p{Extended_Pictographic}\p{Regional_Indicator}]/u.test(segment)) return segment
     }
   } catch {
-    // older engine 鈥?fall back to first code point
+    // older engine — fall back to first code point
   }
   return label ? Array.from(label)[0] : '?'
 }
@@ -74,7 +74,7 @@ async function refreshLabels() {
       if (row && row.id) labelCache.set(String(row.id), String(row.label || row.id))
     }
   } catch {
-    // Registry unavailable 鈥?fall back to raw ids.
+    // Registry unavailable — fall back to raw ids.
   }
 }
 
@@ -86,7 +86,7 @@ function connectionLabel(connectionId) {
 
 function ProfileChip() {
   // Follows the chat the user is LOOKING AT; on a brand-new draft it resolves
-  // to the active gateway's (connectionId, profile) 鈥?the case core hides.
+  // to the active gateway's (connectionId, profile) — the case core hides.
   const owner = useAtomSafe(host && host.state.focusedSessionOwner, null)
   const activeProfile = useAtomSafe(host && host.state.profile, 'default')
   const activeConnectionId = useAtomSafe(host && host.state.connectionId, null)
@@ -136,7 +136,7 @@ function ProfileChip() {
   // 11px, tertiary text, normal weight, standard hover. One uniform text run.
   return jsx('button', {
     type: 'button',
-    title: `Profile: ${profile} 路 Gateway: ${gateway} (click to refresh)`,
+    title: `Profile: ${profile} · Gateway: ${gateway} (click to refresh)`,
     'aria-label': `Profile: ${profile}`,
     className:
       'inline-flex h-full items-center gap-1 rounded-none px-1.5 text-[0.6875rem] text-(--ui-text-tertiary) transition-colors hover:bg-(--chrome-action-hover) hover:text-foreground',
