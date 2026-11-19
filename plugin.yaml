@@ -1,0 +1,13 @@
+name: profile-chip
+version: "1.0.0"
+description: "Draft-aware profile readout for the Hermes Desktop status bar."
+author: digyear
+homepage: https://github.com/digyear/hermes-profile-chip
+license: MIT
+kind: standalone
+requires_hermes: ">=0.23.0"
+platforms: []
+provides_tools: []
+provides_hooks: []
+provides_middleware: []
+requires_env: []
