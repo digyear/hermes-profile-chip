@@ -1,6 +1,6 @@
 name: profile-chip
-version: "1.0.0"
-description: "Draft-aware profile readout for the Hermes Desktop status bar."
+version: "1.1.0"
+description: "Draft-aware profile readout and click-to-switch profile/gateway menu for the Hermes Desktop status bar."
 author: digyear
 homepage: https://github.com/digyear/hermes-profile-chip
 license: MIT
