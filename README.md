@@ -1,12 +1,14 @@
 # Profile Chip
 
-A draft-aware profile readout for the **Hermes Desktop status bar**.
+A draft-aware profile readout **and click-to-switch profile menu** for the
+**Hermes Desktop status bar**.
 
 On a multi-profile / multi-gateway desktop — especially in the **All sessions**
 view — a brand-new draft (`Ctrl+N`) shows no profile anywhere: the title-bar
 profile tag and sidebar badges only mount after the first message creates the
 stored session. Profile Chip names the owner up front, in the left status-bar
-cluster, with the app's own profile mark.
+cluster, with the app's own profile mark — and lets you start the draft in any
+profile on any registered gateway without leaving the keyboard.
 
 ## What it shows
 
@@ -17,11 +19,36 @@ cluster, with the app's own profile mark.
   deterministic identity hue — the same glyph and color as the profile rail
   and Bot Mode avatars.
 - On hover: `Profile: <name> · Gateway: <connection label>`, so two gateways'
-  `default` profiles never read alike. Click re-reads the connection registry
-  (handy right after renaming a gateway).
+  `default` profiles never read alike.
 
 The chip copies the core `STATUSBAR_ACTION_CLASS` (11px, `--ui-text-tertiary`,
 standard hover), so it reads as a native status-bar item.
+
+## Switching profile / gateway
+
+Click the chip (it carries a small `▾`) to open a dropdown grouped by gateway:
+
+- Every registered connection gets a section (`This device`, each remote
+  gateway), listing that gateway's profiles — the same list the profile rail
+  reads, fetched per connection via `host.profiles.list({ connectionId })`
+  without swapping the foreground.
+- `host.profileRoutes()` inventories the whole connection registry and is the
+  authority on what a new chat can target; the per-gateway lists are
+  cross-checked against it. Connect-on-demand SSH sources appear through their
+  credential-free seed route and dial on first pick.
+- The current (gateway, profile) carries a `✓`; your current gateway's section
+  comes first.
+- Picking an entry opens a fresh draft on that exact (connection, profile) via
+  `host.newChat(route)`. Text already typed in the current draft is carried
+  over to the new one (`host.composer` draft get/set).
+- Menu chrome, keyboard navigation and outside-click dismissal come from the
+  SDK's `DropdownMenu` kit — the same components core menus use.
+- Strings follow the app language (English fallback, Simplified Chinese
+  bundled) through the plugin i18n surface.
+
+On shells without the menu / `newChat` APIs the chip degrades to the plain
+readout, and clicking it re-reads the connection registry (handy right after
+renaming a gateway).
 
 ## Install
 
@@ -53,14 +80,18 @@ disable it in **Capabilities → Plugins**.
   (`>=0.23.0` recommended).
 - Draft-aware ownership uses `host.state.focusedSessionOwner`; on older builds
   the chip degrades gracefully to the active gateway's profile.
+- The picker menu feature-detects the `DropdownMenu` kit, `host.newChat`,
+  `host.profiles.list` and `host.profileRoutes`; missing pieces fall back to
+  the read-only chip instead of failing module load.
 - `host.connections()` and `profileColor` are feature-detected; missing exports
-  fall back to a local identity-hue hash instead of failing module load.
+  fall back to a local identity-hue hash.
 
 ## Privacy
 
-Reads profile, connection and focused-session state through the public Desktop
-SDK only. No agent tools, hooks, middleware or env vars; no network calls,
-filesystem access, shell, credentials or telemetry.
+Reads profile, connection and focused-session state, and reads/writes the
+unsent composer draft (for carry-over), through the public Desktop SDK only.
+No agent tools, hooks, middleware or env vars; no network calls, filesystem
+access, shell, credentials or telemetry.
 
 ## Developer notes
 
